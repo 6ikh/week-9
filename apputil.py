@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 class GroupEstimate:
@@ -14,4 +15,15 @@ class GroupEstimate:
         elif self.estimate == 'median':
             self.group_estimates = data.groupby(X.columns.tolist()).median().to_dict()
     def predict(self, X):
-        return None
+        results = []
+        missing_count = 0
+        for _, row in X.iterrows():
+            key = tuple(row)
+            if key in self.group_estimates:
+                results.append(self.group_estimates[key])
+            else:
+                results.append(np.nan)
+                missing_count += 1
+        if missing_count > 0:
+            print(f"{missing_count} missing groups found during prediction.")
+        return np.array(results)
