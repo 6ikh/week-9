@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class GroupEstimator:
+class GroupEstimate:
     def __init__(self, estimate):
         if estimate not in ['mean', 'median']:
             raise ValueError("Invalid estimate type. Choose 'mean' or 'median'.")
