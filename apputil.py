@@ -3,17 +3,21 @@ import numpy as np
 
 
 class GroupEstimate:
+
     def __init__(self, estimate):
         if estimate not in ['mean', 'median']:
             raise ValueError("Invalid estimate type. Choose 'mean' or 'median'.")
         self.estimate = estimate
         self.group_estimates = None
+
     def fit(self, X, y):
-        data = pd.concat([X, y], axis=1)
+        data = pd.concat([X, y.rename("target")], axis=1)
         if self.estimate == 'mean':
-            self.group_estimates = data.groupby(X.columns.tolist()).mean().to_dict()
+            self.group_estimates = data.groupby(X.columns.tolist())["target"].mean()
         elif self.estimate == 'median':
-            self.group_estimates = data.groupby(X.columns.tolist()).median().to_dict()
+            self.group_estimates = data.groupby(X.columns.tolist())["target"].median()
+        self.group_estimates = self.group_estimates.to_dict()
+
     def predict(self, X):
         if not isinstance(X, pd.DataFrame):
             X = pd.DataFrame(X)
