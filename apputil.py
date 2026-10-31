@@ -15,6 +15,8 @@ class GroupEstimate:
         elif self.estimate == 'median':
             self.group_estimates = data.groupby(X.columns.tolist()).median().to_dict()
     def predict(self, X):
+        if not isinstance(X, pd.DataFrame):
+            X = pd.DataFrame(X)
         results = []
         missing_count = 0
         for _, row in X.iterrows():
