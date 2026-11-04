@@ -17,7 +17,8 @@ class GroupEstimate:
     def fit(self, X, y):
         """ Function to fit the GroupEstimate model to the data """
         # Combine X and y into a single DataFrame
-        data = pd.concat([X, y.rename("target")], axis=1)
+        y = pd.Series(y, index=X.index, name="target")
+        data = pd.concat([X, y], axis=1)
         # Group by the columns in X and calculate the specified estimate
         if self.estimate == 'mean':
             # Calculate the mean of the target variable for each group
@@ -40,7 +41,7 @@ class GroupEstimate:
         # Iterate over each row in X and match keys
         for _, row in X.iterrows():
             # Create a tuple key from the row values
-            key = tuple(row)
+            key = row.iloc[0] if X.shape[1] == 1 else tuple(row)
             # Check if the key exists in the group estimates
             if key in self.group_estimates:
                 # Append the corresponding estimate to the results
